@@ -991,7 +991,6 @@
     let tempCapturedCoords = { lat: null, lng: null };
     let activeInvitationsModalInitId = null;
 
-    // حالة الفلاتر التفاعلية المتبادلة للوحات التحليل الذكي
     let availabilityFilters = { day: null, time: null, gov: null, memberName: null };
     let currentFilteredAvailabilityMembers = [];
 
@@ -1677,7 +1676,7 @@
       // رسم الأيام (مع إخفاء الأيام التي تساوي 0 بناءً على الفلاتر الأخرى)
       const daysHtml = DAYS_LIST.map(day => {
         const count = dayCounts[day];
-        if (count === 0 && (availabilityFilters.time || availabilityFilters.gov)) return ''; // إخفاء الصفرية عند الفرز
+        if (count === 0 && (availabilityFilters.time || availabilityFilters.gov || availabilityFilters.memberName)) return ''; // إخفاء الصفرية عند الفرز
         const pct = Math.round((count / maxDayVal) * 100);
         const isSelected = availabilityFilters.day === day;
         return `
@@ -1700,7 +1699,7 @@
       // رسم الأوقات (مع إخفاء الفترات التي تساوي 0)
       const timesHtml = TIMES_LIST.map(tObj => {
         const count = timeCounts[tObj.label];
-        if (count === 0 && (availabilityFilters.day || availabilityFilters.gov)) return '';
+        if (count === 0 && (availabilityFilters.day || availabilityFilters.gov || availabilityFilters.memberName)) return '';
         const pct = Math.round((count / maxTimeVal) * 100);
         const isSelected = availabilityFilters.time === tObj.label;
         return `
@@ -1719,7 +1718,7 @@
 
       // رسم المحافظات (إخفاء المحافظات التي تساوي صفر بعد الفرز لتكون اللوحة تفاعلية نظيفة)
       const govsHtml = Object.entries(govCounts).map(([govName, count]) => {
-        if (count === 0 && (availabilityFilters.day || availabilityFilters.time)) return '';
+        if (count === 0 && (availabilityFilters.day || availabilityFilters.time || availabilityFilters.memberName)) return '';
         const isSelected = availabilityFilters.gov === govName;
         return `
           <button type="button" onclick="toggleAvailabilityFilter('gov', '${govName}')"
